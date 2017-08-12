@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import logging
+import getopt
+import sys
+
+from app.xuexi import xuexi
+
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
+
+ABSDir = os.path.abspath(os.path.dirname(__file__))
+
+
+if __name__ == u"__main__":
+    argv_list = sys.argv
+    # print argv_list
+    opts, args = getopt.getopt(argv_list[2:], "hc:m:")
+
+    conf_name = u"config"
+    model = u"one"
+
+    # if not opts:
+    #     print """
+    #                 python run project -c config.ini/[config] -m model[one/two] 1
+    #         """
+    #     sys.exit()
+
+    for op, value in opts:
+        if op == "-c":
+            conf_name = value
+            pass
+        elif op == "-m":
+            model = value
+            pass
+        elif op == "-h":
+            print """
+            python run project -c config.ini/[config] -m model[one/two] 2
+            """
+            sys.exit()
+
+    # model = u"one"  # # 模式一 单一category 多线程 模式二 根据category 多线程
+    print conf_name
+    pro_name = argv_list[1]
+
+    # 日志
+    logging_path = os.path.join(ABSDir, u"./cache/{m}/".format(m=pro_name))
+    if not os.path.exists(logging_path):
+        os.makedirs(logging_path)
+    logging_filename = os.path.join(ABSDir, './cache/{m}/{m}_{c}.log'.format(m=pro_name, c=conf_name))
+    if not os.path.exists(logging_filename):
+        with open(logging_filename, 'w') as f:
+            f.write('')
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                        datefmt='%a, %d %b %Y %H:%M:%S',
+                        filename=logging_filename,
+                        filemode='w')
+
+    # pid  文件
+    pid_file = os.path.join(ABSDir, './cache/{m}.pid'.format(m=pro_name))
+    if not os.path.exists(pid_file):
+        with open(pid_file, 'w') as f:
+            f.write(str(os.getpid()))
+        pass
+    else:
+        print u".pid 已经存在 ！！ 请及时处理！！"
+    pass
+
+    a = xuexi()
+    a.aa()
+
+
+
