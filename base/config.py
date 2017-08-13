@@ -47,6 +47,7 @@ class Config(object):
                 if self.file_is_ini(file_path):
                     print file_path
                     self.__cf.read(file_path)
+
         if params.get('dir'):
             print params.get('dir')
             file_dir = self.__root_dir + params.get('dir') + u"/"
